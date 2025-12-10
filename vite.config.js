@@ -9,6 +9,9 @@ import { resolve } from 'path'
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd())
     return {
+        base: mode === 'production'
+            ? '/test_ci_cd/'  // 你的仓库名称，末尾要有斜杠
+            : '/',
         plugins: [
             vue(),
             AutoImport({
