@@ -1,0 +1,7 @@
+# 基础的变基风格；保证不同 IDE（VSCode, WebStorm）缩进一致
+root = true
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 2
+end_of_line = lf

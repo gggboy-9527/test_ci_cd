@@ -1,0 +1,10 @@
+/* src/assets/styles/reset.css */
+/* 推荐：全局设置 border-box */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* 可选：移除 tap 高亮（移动端） */
+* {
+  -webkit-tap-highlight-color: transparent;
+}

@@ -1,0 +1,7 @@
+/* src/assets/styles/index.css */
+@import 'modern-normalize';
+
+@import './reset.css';
+
+@import './global.css';
+

@@ -1,0 +1,5 @@
+# 忽略所有，只保留 dist/ 和必要的配置文件
+*
+!dist/
+!Dockerfile
+!package.json    # 如果需要记录版本
