@@ -94,4 +94,4 @@ jobs:
           source: './dist/*'
           target: 'C:/test_ci_cd'
           rm: true # 删除目标目录原有内容，实现干净覆盖
-          debug: false
+          debug: true # 👈 临时开启，看详细日志
