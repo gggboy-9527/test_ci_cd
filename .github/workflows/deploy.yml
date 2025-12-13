@@ -48,6 +48,6 @@ jobs:
           SERVER_IP: ${{ secrets.SERVER_IP }}
         run: |
           # 清空目标目录（PowerShell 命令，适用于 Windows OpenSSH）
-          ssh deploy@${SERVER_IP} "Remove-Item -Recurse -Force 'C:/test_ci_cd/*' -ErrorAction SilentlyContinue"
+          ssh ggcyuser@${SERVER_IP} "Remove-Item -Recurse -Force 'C:/test_ci_cd/*' -ErrorAction SilentlyContinue"
           # 上传新文件
-          scp -r -o StrictHostKeyChecking=no ./dist/* deploy@${SERVER_IP}:"C:/test_ci_cd"
+          scp -r -o StrictHostKeyChecking=no ./dist/* ggcyuser@${SERVER_IP}:"C:/test_ci_cd"
