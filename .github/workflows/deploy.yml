@@ -1,26 +1,53 @@
-name: Test SSH Connection to Windows Server
+name: Deploy Vue App to My Windows Server
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: 'deploy-to-server'
+  cancel-in-progress: true
 
 jobs:
-  ssh-test:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Checkout the code
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Step 2: Setup SSH key for authentication
-      - name: Setup SSH Key
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Vue App
+        run: npm run build
+        # 假设构建产物在 ./dist 目录
+
+      # ====== SSH 配置部分 ======
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      # Step 3: Test SSH connection to the server
-      - name: Test SSH connection
+      # ====== 清空远程目录并上传 ======
+      - name: Clean remote directory and upload via SCP
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
         run: |
-          ssh -v -i ~/.ssh/id_rsa deploy@${{ secrets.SERVER_IP }} 'echo "SSH Test Passed"'
+          # 清空目标目录（PowerShell 命令，适用于 Windows OpenSSH）
+          ssh deploy@${SERVER_IP} "Remove-Item -Recurse -Force 'C:/test_ci_cd/*' -ErrorAction SilentlyContinue"
+          # 上传新文件
+          scp -r -o StrictHostKeyChecking=no ./dist/* deploy@${SERVER_IP}:"C:/test_ci_cd"
