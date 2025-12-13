@@ -12,7 +12,7 @@
 import { h, ref } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 import { useTheme } from "@/composables/useTheme"; // 引入之前写好的主题钩子
-console.log("BasicLayout loaded");
+
 const { toggleDark, isDarkMode, themeList, setTheme, currentThemeName } =
   useTheme();
 
